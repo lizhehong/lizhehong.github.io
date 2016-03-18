@@ -1,12 +1,96 @@
 <!doctype html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>lizhehong Blog</title>
+    <title>JDK 7 中的 Fork/Join 模式</title>
+    <link rel="stylesheet" href="../../../stylesheets/styles.css">
+    <link rel="stylesheet" href="../../../stylesheets/github-dark.css">
+    <script src="../../../javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  </head>
-  <body>
-  <h1> 你好 测试</h1>
-  </body>
+</head>
+<div class="wrapper">
+    <header>
+        <h2>轻松实现多核时代的并行计算</h2>
+    </header>
+    <section>
+        <p>随着多核时代的来临，软件开发人员不得不开始关注并行编程领域。而 JDK 7 中将会加入的 Fork/Join 模式是处理并行编程的一个经典的方法。虽然不能解决所有的问题，但是在它的适用范围之内，能够轻松的利用多个 CPU提供的计算资源来协作完成一个复杂的计算任务。通过利用 Fork/Join模式，我们能够更加顺畅的过渡到多核的时代。本文将介绍使用 JDK 7 中 Fork/Join 模式的方法和其他相关改进。阅读本文之后，读者将能够独立地在软件开发中使用 Fork/Join 模式来改进程序的性能。</p>
+        <hr>
+        <h1>介绍</h1>
+
+        <p>随着多核芯片逐渐成为主流，大多数软件开发人员不可避免地需要了解并行编程的知识。而同时，主流程序语言正在将越来越多的并行特性合并到标准库或者语言本身之中。我们可以看到，JDK 在这方面同样走在潮流的前方。在 JDK 标准版 5 中，由 Doug Lea 提供的并行框架成为了标准库的一部分（JSR-166）。随后，在 JDK 6 中，一些新的并行特性，例如并行 collection 框架，合并到了标准库中（JSR-166x）。直到今天，尽管 Java SE 7 还没有正式发布，一些并行相关的新特性已经出现在 JSR-166y 中：</p>
+        <p>
+            <strong>(1)Fork/Join 模式;</strong>
+            <br> (2)TransferQueue，它继承自 BlockingQueue 并能在队列满时阻塞“生产者”；
+            <br> (3)ArrayTasks/ListTasks，用于并行执行某些数组/列表相关任务的类；
+            <br> (4)IntTasks/LongTasks/DoubleTasks，用于并行处理数字类型数组的工具类，提供了排序、查找、求和、求最小值、求最大值等功能；
+        </p>
+        <p>
+            其中，对 Fork/Join 模式的支持可能是对开发并行软件来说最通用的新特性。在 JSR-166y 中，Doug Lea 实现 ArrayTasks/ListTasks/IntTasks/LongTasks/DoubleTasks 时就大量的用到了 Fork/Join 模式。读者还需要注意一点，因为 JDK 7 还没有正式发布，因此本文涉及到的功能和发布版本有可能不一样。</p>
+        <p>Fork/Join 模式有自己的适用范围。如果一个应用能被分解成多个子任务，并且组合多个子任务的结果就能够获得最终的答案，那么这个应用就适合用 Fork/Join 模式来解决。图 1 给出了一个 Fork/Join 模式的示意图，位于图上部的 Task 依赖于位于其下的 Task 的执行，只有当所有的子任务都完成之后，调用者才能获得 Task 0 的返回结果。</p>
+        <h2>图 1. Fork/Join 模式示意图</h2>
+          <img src="http://www.ibm.com/developerworks/cn/java/j-lo-forkjoin/figure001.jpg" alt="Fork/Join 模式示意图">
+          <p>
+          可以说，Fork/Join 模式能够解决很多种类的并行问题。通过使用 Doug Lea 提供的 Fork/Join 框架，软件开发人员只需要关注任务的划分和中间结果的组合就能充分利用并行平台的优良性能。其他和并行相关的诸多难于处理的问题，例如负载平衡、同步等，都可以由框架采用统一的方式解决。这样，我们就能够轻松地获得并行的好处而避免了并行编程的困难且容易出错的缺点。</p>
+          
+          <h2>使用 Fork/Join 模式</h2>
+          <p>在开始尝试 Fork/Join 模式之前，我们需要从 Doug Lea 主持的 Concurrency JSR-166 Interest Site 上下载 JSR-166y 的源代码，并且我们还需要安装最新版本的 JDK 6（下载网址请参阅 参考资源）。Fork/Join 模式的使用方式非常直观。首先，我们需要编写一个 ForkJoinTask 来完成子任务的分割、中间结果的合并等工作。随后，我们将这个 ForkJoinTask 交给 ForkJoinPool 来完成应用的执行。</p>
+          <p>通常我们并不直接继承 ForkJoinTask，它包含了太多的抽象方法。针对特定的问题，我们可以选择 ForkJoinTask 的不同子类来完成任务。RecursiveAction 是 ForkJoinTask 的一个子类，它代表了一类最简单的 ForkJoinTask：不需要返回值，当子任务都执行完毕之后，不需要进行中间结果的组合。如果我们从 RecursiveAction 开始继承，那么我们只需要重载 protected void compute() 方法。下面，我们来看看怎么为快速排序算法建立一个 ForkJoinTask 的子类：</p>
+        <pre>
+          class SortTask extends RecursiveAction {
+          final long[] array;
+          final int lo;
+          final int hi;
+          private int THRESHOLD = 30; public SortTask(long[] array) {
+              this.array = array;
+              this.lo = 0;
+              this.hi = array.length - 1;
+          }
+          public SortTask(long[] array, int lo, int hi) {
+              this.array = array;
+              this.lo = lo;
+              this.hi = hi;
+          }
+          protected void compute() {
+              if (hi - lo < THRESHOLD)
+                  sequentiallySort(array, lo, hi);
+              else {
+                  int pivot = partition(array, lo, hi);
+                  coInvoke(new SortTask(array, lo, pivot - 1), new SortTask(array,
+                      pivot + 1, hi));
+              }
+          }
+          private int partition(long[] array, int lo, int hi) {
+                long x = array[hi];
+                int i = lo - 1;
+                for (int j = lo; j < hi; j++) {
+                    if (array[j] <= x) {
+                        i++;
+                        swap(array, i, j);
+                    }
+                }
+                swap(array, i + 1, hi);
+                return i + 1;
+            }
+            private void swap(long[] array, int i, int j) {
+                if (i != j) {
+                    long temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                }
+            }
+            private void sequentiallySort(long[] array, int lo, int hi) {
+                Arrays.sort(array, lo, hi + 1);
+            }
+        }</code>
+        <h2><a href="http://www.ibm.com/developerworks/cn/java/j-lo-forkjoin/">详细请看...</a></h2>
+    </section>
+</div>
+<footer>
+    <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+</footer>
+<!--[if !IE]><script>fixScale(document);</script><![endif]-->
+</body>
+
 </html>
