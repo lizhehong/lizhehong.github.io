@@ -4,24 +4,99 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>photo Slide demo</title>
     <link rel="stylesheet" href="../../../stylesheets/styles.css">
-    <link rel="stylesheet" href="../../../stylesheets/github-dark.css">
-    <script src="../../../javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../../stylesheets/github-dark.css">  
+    <link href="http://photoswipe.com/dist/photoswipe.css?v=4.1.1-1.0.4" rel="stylesheet" />
+    <link href="http://photoswipe.com/dist/default-skin/default-skin.css?v=4.1.1-1.0.4" rel="stylesheet" />
 </head>
 <div class="wrapper">
     <header>
         <h2>photo Slide demo</h2>
     </header>
     <section>
-        
+    	<h1>请点击下面的按钮</h1>
+    	<button onclick="openSlide();">嘻嘻</button>
     </section>
 </div>
 <footer>
     <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
 </footer>
-<!--[if !IE]><script>fixScale(document);</script><![endif]-->
+<script src="http://photoswipe.com/dist/photoswipe.min.js?v=4.1.1-1.0.4"></script>
+<script src="http://photoswipe.com/dist/photoswipe-ui-default.min.js?v=4.1.1-1.0.4"></script>
+<script src="../../../javascripts/scale.fix.js"></script>
+<script type="text/javascript">
+function openSlide(){
+	var section = document.querySelector("section");
+	var arr =  [];
+	arr.push('<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">');
+    arr.push('        <div class="pswp__bg"></div>');
+    arr.push('        <div class="pswp__scroll-wrap">');
+    arr.push('            <div class="pswp__container">');
+    arr.push('                <div class="pswp__item"></div>');
+    arr.push('                <div class="pswp__item"></div>');
+    arr.push('                <div class="pswp__item"></div>');
+    arr.push('            </div>');
+    arr.push('            <div class="pswp__ui pswp__ui--hidden">');
+    arr.push('                <div class="pswp__top-bar">');
+    arr.push('                    <div class="pswp__counter"></div>');
+   	arr.push('                    <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>');
+    arr.push('                    <button class="pswp__button pswp__button--share" title="Share"></button>');
+    arr.push('                    <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>');
+    arr.push('                    <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>');
+    arr.push('                    <div class="pswp__preloader">');
+    arr.push('                        <div class="pswp__preloader__icn">');
+    arr.push('                            <div class="pswp__preloader__cut">');
+    arr.push('                                <div class="pswp__preloader__donut"></div>');
+    arr.push('                            </div>');
+    arr.push('                        </div>');
+    arr.push('                    </div>');
+    arr.push('                </div>');
+    arr.push('                <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">');
+    arr.push('                    <div class="pswp__share-tooltip"></div>');
+    arr.push('                </div>');
+    arr.push('                <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">');
+    arr.push('                </button>');
+    arr.push('                <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">');
+    arr.push('                </button>');
+    arr.push('                <div class="pswp__caption">');
+    arr.push('                    <div class="pswp__caption__center"></div>');
+    arr.push('                </div>');
+    arr.push('            </div>');
+    arr.push('        </div>');
+    arr.push('    </div>');
+	section.innerHTML = section.innerHTML + arr.join("");
+	var pswpElement = document.querySelectorAll('.pswp')[0];
+	console.log(pswpElement);
+	// build items array
+	var items = [{
+	    src: 'http://gdp.alicdn.com/imgextra/i4/774950933/TB2bENYmXXXXXa3XpXXXXXXXXXX_!!774950933.jpg',
+	    w: 600,
+	    h: 400
+	}, {
+	    src: 'http://gdp.alicdn.com/imgextra/i3/774950933/TB2_vQjlFXXXXcAXXXXXXXXXXXX_!!774950933.jpg',
+	    w: 1200,
+	    h: 900
+	}];
+
+	// define options (if needed)
+	var options = {
+	    // optionName: 'option value'
+	    // for example:
+	    index: 0 // start at first slide
+	};
+
+	// Initializes and opens PhotoSwipe
+	var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+	gallery.init();
+	gallery.listen('close', function() { 
+		alert("1");
+		section.innerHTML='<h1>请点击下面的按钮</h1><button onclick="openSlide();">嘻嘻</button>';
+	});
+}
+
+</script>
 </body>
 
 </html>
