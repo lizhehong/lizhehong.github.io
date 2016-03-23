@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+
+<head>
+    <title>注册</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.12.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+
+<body class="ui-mobile-viewport ui-overlay-a">
+    <div tabindex="0" class="ui-page ui-page-theme-a ui-page-active" data-role="page">
+        <div data-role="header">
+            <a class="ui-btn ui-shadow ui-corner-all ui-icon-back ui-btn-icon-notext" data-rel="back">返回</a>
+            <h1>注册</h1>
+        </div>
+        <!-- /header -->
+        <div role="main" class="ui-content">
+            <form method="post">
+                <label for="username">用户:</label>
+                <input data-clear-btn="true" name="username" id="username" value="" type="text" />
+                <label for="password">密码:</label>
+                <input data-clear-btn="true" name="password" id="password" value="" type="password" />
+                <label for="phone">手机号:</label>
+                <input data-clear-btn="true" name="phone" id="phone" value="" type="tel" />
+                <label for="email">邮箱:</label>
+                <input data-clear-btn="true" name="email" id="email" value="" type="email" />
+                <label for="devId">设备ID:</label>
+                <input data-clear-btn="true" name="devId" id="devId" value="" type="text" />
+                <label for="dev_password">设备密码:</label>
+                <input data-clear-btn="true" name="dev_password" id="dev_password" autocomplete="off" type="text" />
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <button class="ui-btn ui-corner-all ui-shadow">注册</button>
+                    </div>
+                    <div class="ui-block-b">
+                        <a href="javascript:void 0" class="ui-btn ui-corner-all ui-shadow" type="button" data-inline="true">扫描</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- /content -->
+    </div>
+    <div class="ui-loader ui-corner-all ui-body-a ui-loader-default">
+        <span class="ui-icon-loading"></span>
+        <h1>loading</h1>
+    </div>
+</body>
+
+</html>

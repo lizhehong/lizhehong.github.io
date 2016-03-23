@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+
+<head>
+    <title>配置</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.12.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+
+<body class="ui-mobile-viewport ui-overlay-a">
+    <div tabindex="0" class="ui-page ui-page-theme-a ui-page-active" data-role="page">
+        <div data-role="header">
+            <a class="ui-btn ui-shadow ui-corner-all ui-icon-back ui-btn-icon-notext" data-rel="back">返回</a>
+            <h1>配置</h1>
+        </div>
+        <!-- /header -->
+        <div role="main" class="ui-content">
+            <form method="post">
+                <label for="text-1">路由器无线名称:</label>
+                <input data-clear-btn="true" name="text-1" id="text-1" value="" type="text">
+                <label for="password-1">路由器无线密码:</label>
+                <input data-clear-btn="true" name="password-1" id="password-1" value="" autocomplete="off" type="password">
+                <div class="ui-grid-a">
+                    <button class="ui-shadow ui-corner-all ui-btn">设置</button>
+                </div>
+            </form>
+        </div>
+        <!-- /content -->
+    </div>
+    <div class="ui-loader ui-corner-all ui-body-a ui-loader-default">
+        <span class="ui-icon-loading"></span>
+        <h1>loading</h1>
+    </div>
+</body>
+
+</html>
