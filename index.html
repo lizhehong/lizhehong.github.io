@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html style="font-size:90px;">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -24,6 +24,19 @@
           <li class="single"><a href="https://github.com/lizhehong/lizhehong.github.io">View On <strong>GitHub</strong></a></li>
         </ul>
       </header>
+       <section>
+        <h1>TIME: <small><time>2016-3-24-13:01</time></small></h1>
+        <p>下午</p>
+        <p class="view">
+            <p><span style="font-size: 0.375rem">rem单位操作</span></p>
+            <p><span style="font-size: 0.4rem">如果要改变字体大小 只需要改变 html 的 font-size 就能全局改变字体大小</span></p>
+            <p><span>利用不同设备的大小 只要设置了html的大小 以后的所有尺寸问题 一一解决</span></p>
+            <button onclick="changeHTMLFornSize();">动态改变字体大小</button>
+            <button onclick="closeTimer();">停止改变字体大小</button>
+            <a href="http://www.cnblogs.com/leejersey/p/3662612.html"><p>demo1</p></a>
+            <a href="http://www.w3cplus.com/css3/define-font-size-with-css3-rem"><p>demo2</p></a>
+        </p>
+      </section>
       <section>
         <h1>TIME: <small><time>2016-3-24-03:17</time></small></h1>
         <p>凌晨</p>
@@ -61,6 +74,17 @@
       <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/lizhehong">lizhehong</a></p>
     </footer>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
+    <script type="text/javascript">
+      var timer ;
+        function changeHTMLFornSize(){
+          var defaultVal = 90; 
+          timer = setInterval(function(){
+            document.querySelector("html").style.fontSize = Math.round(Math.random()*defaultVal)+"px";
+          },2000);
+        }
+        function closeTimer(){
+          clearInterval(timer);
+        }
+    </script>
   </body>
 </html>
